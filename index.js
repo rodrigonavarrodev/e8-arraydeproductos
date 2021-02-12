@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const router = express.Router()
+const path = require('path');
 
 
 app.use(express.json())
@@ -9,13 +10,13 @@ app.use(express.urlencoded({extended: true}))
 let productos = []
 
 router.get('/', function (req, res) {
-  res.send('Hello World')
+    res.sendFile(path.join(__dirname, '/public', 'index.html'));
 })
 
 
 
 router.get('/productos', (req, res) => {
-    if (productos == 0) {
+    if (productos.length === 0) {
     res.json("No hay productos para mostrar")
     }
     res.json(productos)
@@ -40,7 +41,7 @@ router.post('/productos', (req, res) => {
         id: productos.length+1
     }
     productos.push(producto)
-    res.send(producto)
+    res.send([...productos, producto])
 })
 
 app.put('/productos/:id', (req, res) => {
@@ -56,7 +57,7 @@ app.put('/productos/:id', (req, res) => {
     res.send(producto)
 }) 
 
-app.delete('/api/productos/:id', (req, res) => {
+app.delete('/productos/:id', (req, res) => {
     const id = req.params.id
     const producto = productos.find( producto => producto.id == id)
     if(!producto) {
