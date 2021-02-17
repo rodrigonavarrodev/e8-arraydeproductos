@@ -1,0 +1,28 @@
+html
+    head
+    title='Productos'
+    link(rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css")
+
+    body.col-md-4.mx-auto
+        
+        h3='Productos'
+        table.table.table-striped
+            thead
+                tr
+                th.col='Producto'
+                th.col='Precio'
+                th.col='Foto'
+            
+            tbody
+            each producto, i in productos
+                tr
+                td.col=producto.titulo
+                td.col=producto.precio
+                td.col
+                    img(src=producto.foto)
+                
+            
+            else
+                tr
+                th.col='No hay productos'
+

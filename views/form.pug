@@ -1,0 +1,20 @@
+html 
+    head 
+    title='Ingregar Producto'
+    link(rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css")
+    
+    body.col-md-4.mx-auto
+        h3 Ingrese un producto desde PUG
+        
+        form.card.card-body(method='POST', action='/api/productos' )
+            #form-group
+                label Producto:
+                input.form-control(name='titulo', type='text') 
+            #form-group
+                label Precio:
+                input.form-control(name='precio', type='text')
+            #form-group
+                label Foto:
+                input.form-control(name='foto', type='text') 
+            input.btn.btn-primary.btn-block.mt-5(type='submit', value='Guardar')            
+                
