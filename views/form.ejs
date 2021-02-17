@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+    <title>Ingresar un producto</title>
+</head>
+<body>
+      
+ <div class="col-md-4 mx-auto">
+    <h3>Ingrese un producto</h3>
+    <div class="card card-body">
+        <form action="/api/productos" method="POST">
+            <div class="form-group">
+                <input type="text" name="titulo" class="form-control" placeholder="Producto" autofocus required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="precio" class="form-control" placeholder="Precio" required>
+            </div>
+             <div class="form-group">
+                <input type="text" name="foto" class="form-control" placeholder="Foto" required>
+            <button class="btn btn-primary btn-block mt-5">Guardar</button>
+            </div>
+        </form>
+    </div>      
+</div>
+</body>
+</html>
+
+
+  
