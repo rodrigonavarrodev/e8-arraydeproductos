@@ -1,5 +1,9 @@
 const express = require('express')
+//const app = express()
 const app = express()
+const server = require('http').createServer(app);
+const io = require('socket.io')(server)
+
 const router = express.Router()
 const path = require('path');
 const handlebars = require('express-handlebars')
@@ -22,14 +26,14 @@ app.engine(
 
 let productos = []
 
-router.get('/', function (req, res) {
+app.get('/', function (req, res) {
     //res.sendFile(path.join(__dirname, '/public', 'index.html'));
     res.render('form')
 })
 
 
 
-router.get('/productos', (req, res) => {
+app.get('/productos', (req, res) => {
     if (productos.length === 0) {
     res.render('productos', {productos: [
         {titulo: "No hay productos para mostrar"}
@@ -38,7 +42,7 @@ router.get('/productos', (req, res) => {
     res.render('productos', {productos, listExists: true})
 })
  
-router.get('/productos/:id', (req, res) => {
+app.get('/productos/:id', (req, res) => {
     const id = req.params.id
     const producto = productos.find( producto => producto.id == id)
     if(!producto) {
@@ -48,7 +52,7 @@ router.get('/productos/:id', (req, res) => {
     res.render('productos', {productos, listExists: true})
 })
 
-router.post('/productos', (req, res) => {
+app.post('/productos', (req, res) => {
     const { titulo, precio, foto} = req.body
     const producto = {
         titulo,
@@ -85,12 +89,43 @@ app.delete('/productos/:id', (req, res) => {
 })
 
 
-app.use('/api', router)
+//app.use('/api', router)
 
 app.set('view engine', 'hbs')
 app.set('views', './views')
 app.use(express.static('public'))
 
-app.listen(8080, () => {
+
+server.listen(8080, () => {
     console.log("El servidor esta corriendo en el puerto 8080");
+})
+
+//escuchamos un evento de conexion
+/* io.on('connection', (socket) => {
+    console.log(socket.id);
+
+    socket.broadcast.emit('productos', {productos});
+
+    socket.on('product', (message) => {
+        const { titulo, precio, foto} = message;
+
+        const producto = {
+            titulo,
+            precio,
+            foto,
+            id: productos.length+1
+        }
+
+        products.push(producto);
+    })  
+}) */
+
+
+io.on('connection', (socket) => {
+    socket.broadcast.emit('productos', 'Desde el server')
+    //console.log(socket.id)
+    socket.on('producto', (mensaje) => {
+        console.log(mensaje);
+        io.emit('producto', mensaje)
+    })
 })

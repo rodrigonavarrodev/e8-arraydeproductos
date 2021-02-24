@@ -1,17 +1,76 @@
- <div class="col-md-4 mx-auto">
+ <div class="col-md-8 mx-auto">
         <h3>Ingrese un producto</h3>
         <div class="card card-body">
-            <form action="/api/productos" method="POST">
+            <form id="form" action="/productos" method="POST">
                 <div class="form-group">
-                    <input type="text" name="titulo" class="form-control" placeholder="Producto" autofocus required>
+                    <input id="input" type="text" name="titulo" class="form-control" placeholder="Producto" autofocus required>
                 </div>
                 <div class="form-group">
-                    <input type="text" name="precio" class="form-control" placeholder="Precio" required>
+                    <input type="text" name="precio" class="form-control" placeholder="Precio">
                 </div>
                  <div class="form-group">
-                    <input type="text" name="foto" class="form-control" placeholder="Foto" required>
-                <button class="btn btn-primary btn-block mt-5">Guardar</button>
+                    <input type="text" name="foto" class="form-control" placeholder="Foto">
+                    <button class="btn btn-primary btn-block mt-5">Guardar</button>
                 </div>
             </form>
         </div>      
-    </div>
+</div>
+
+<div class="col-md-8 mt-5 mx-auto">
+    <h2>Productos</h2>
+
+    <table id="productDom" class="table table-dark table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Foto</th>
+            </tr>
+        </thead>
+        {{#each productos}}
+        <tbody>
+            <tr>
+            <td>{{this.titulo}}</td>
+            <td>{{this.precio}}</td>
+            <td><img src={{this.foto}}></td>
+            </tr>
+        </tbody>
+        {{/each}}
+    </table>
+
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io()
+
+    const form = document.getElementById('form')
+    const input = document.getElementById('input')
+    let productDom = document.getElementById('productDom')
+    
+    //esuchar el evento de cuando alguien aprete enviar
+    form.addEventListener('submit', (event) => {
+        //para no recargar la pagina
+        event.preventDefault()
+        if(input.value) {
+            socket.emit('producto', input.value)
+            input.value = ''
+        }
+    })
+
+    socket.on('producto', (mensaje) => {
+        //console.log(mensaje)
+        let nuevoProducto = document.createElement('td')
+        nuevoProducto.textContent = mensaje
+        productDom.appendChild(nuevoProducto)
+    })
+
+    socket.on('productos', (payload) => {
+        console.log(payload);
+    })
+
+    
+
+
+</script>
