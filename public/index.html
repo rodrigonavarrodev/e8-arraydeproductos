@@ -1,4 +1,17 @@
- <div class="col-md-8 mx-auto">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incorporando HBS</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+
+</head>
+<body>
+    
+    
+    <div class="col-md-8 mx-auto">
         <h3>Ingrese un producto</h3>
         <div class="card card-body">
             <form id="form" action="/productos" method="POST">
@@ -27,50 +40,37 @@
             <th scope="col">Foto</th>
             </tr>
         </thead>
-        {{#each productos}}
+       
         <tbody>
             <tr>
-            <td>{{this.titulo}}</td>
-            <td>{{this.precio}}</td>
-            <td><img src={{this.foto}}></td>
+            <td>Heladera</td>
+            <td>10.000</td>
+            <td><img src='https://cdn3.iconfinder.com/data/icons/smart-home-set/132/Icon_refrigerator-32.png'></td>
             </tr>
         </tbody>
-        {{/each}}
+        
     </table>
 
 </div>
 
+<div class="col-md-8 mx-auto mb-5 mt-5">
+    <h3>Envia tu mensaje</h3>
+    <form onsubmit="return addMessage(this)">
+        <input type="text" id="email" placeholder="Tu email" required>
+        <input type="text" id="texto" placeholder="Escribe un mensaje para todos">
+        <input type="submit" value="Enviar">
+    </form>    
+</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io()
-
-    const form = document.getElementById('form')
-    const input = document.getElementById('input')
-    let productDom = document.getElementById('productDom')
-    
-    //esuchar el evento de cuando alguien aprete enviar
-    form.addEventListener('submit', (event) => {
-        //para no recargar la pagina
-        event.preventDefault()
-        if(input.value) {
-            socket.emit('producto', input.value)
-            input.value = ''
-        }
-    })
-
-    socket.on('producto', (mensaje) => {
-        //console.log(mensaje)
-        let nuevoProducto = document.createElement('td')
-        nuevoProducto.textContent = mensaje
-        productDom.appendChild(nuevoProducto)
-    })
-
-    socket.on('productos', (payload) => {
-        console.log(payload);
-    })
-
-    
+<div class="col-md-8 mx-auto">
+    <h3>Mensajes</h3>
+    <div id='messages'></div>     
+</div>
 
 
-</script>
+
+<script src="./socket.io/socket.io.js"></script>
+<script src="./main.js"></script>
+
+</body>
+</html>
