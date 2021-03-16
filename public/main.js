@@ -18,6 +18,7 @@ const socket = io()
 
     //renderizar mensajes que vienen del servidor
     function render (data) {
+        
         let html = data.map(function(elem, index) {
             return(`<div>
             <strong style="color:blue">${elem.email}</strong>:
@@ -28,8 +29,9 @@ const socket = io()
         document.getElementById('messages').innerHTML = html;
         }
         socket.on('messages', function(data) {
+            console.log('data', data);
             render (data)
-            console.log(data);
+            
         })
 
       //definimos la funcion para enviar el mensaje al servidor
@@ -41,6 +43,7 @@ const socket = io()
             text: document.getElementById('texto').value
         }
         socket.emit('new-message', mensaje)
+        console.log('consol', mensaje);
         return false
     }
   
