@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "express-handlebars": "^5.2.1"
+    "express-handlebars": "^5.2.1",
+    "knex": "^0.95.2",
+    "mysql2": "^2.2.5"
   }
 }
