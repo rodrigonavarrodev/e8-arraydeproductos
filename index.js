@@ -4,9 +4,11 @@ const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server)
 const fs = require('fs');
-const knex = require ('./db');
+
 const { getMensajes, insertMensajes } = require("./mensajesModel");
 
+
+require("./database");
 
 
 const router = express.Router()

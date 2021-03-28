@@ -1,31 +1,20 @@
-const knex = require ('./db');
 const mensajesModel = {};
-
+require("./database");
+const Mensaje = require("./models/mensaje");
 
 mensajesModel.getMensajes = async () => {
-    try {
-        let result = await knex('mensajes').select('*')
-        return result
-    } catch(err){
-        console.log(err);
-    } finally {
-        knex.destroy()
-    }
-    
+    let mensajes = await Mensaje.find();
+    return mensajes
 }
 
 
 mensajesModel.insertMensajes = async (coment) => { 
-    try{
-        console.log('coment', coment);
-        let result = await knex('mensajes').insert(coment)
-        return result
-    } catch(err) {
-        console.log(err);
-    } finally {
-        knex.destroy()
-    }
+    const item = new Mensaje({
+        email: coment.email,
+        text: coment.text
+    });
+    let result = await item.save();
+    return res.send(result)
 }
 
 module.exports = mensajesModel;
-
