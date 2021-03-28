@@ -3,8 +3,11 @@ const app = express();
 const router = express.Router();
 const path = require("path");
 const handlebars = require("express-handlebars");
-const { getProducts, getProductsByID, insertProducts } = require("./productoModel");
+const Producto = require("./models/producto");
+const { db } = require("./models/producto");
 
+require("dotenv").config();
+require("./database");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,35 +22,33 @@ app.engine(
   })
 );
 
-
 router.get("/", function (req, res) {
   //res.sendFile(path.join(__dirname, '/public', 'index.html'));
   res.render("form");
 });
 
-
 router.get("/productos/:id", async (req, res) => {
   const id = req.params.id;
-  let productos = await getProductsByID(id);
-  res.json(productos)
+  let producto = await Producto.findById(id);
+  res.json(producto);
 });
 
-
 router.post("/productos", async (req, res) => {
-    const item = ({ producto, precio, foto } = req.body);
-    let result = await insertProducts(item);
-    res.json(item)
-   
-  });
+  const item = ({ producto, precio, foto } = new Producto(req.body));
+  let result = await item.save();
+  res.json(item);
+});
 
+router.get("/productos", async (req, res) => {
+  let productos = await Producto.find();
+  res.json(productos);
+});
 
-  router.get("/productos", async (req, res) => {
-    let productos = await getProducts();
-    res.json(productos)
-  });
-
-
-
+router.delete("/productos/:id", async (req, res) => {
+  const id = req.params.id;
+  let producto = await Producto.findByIdAndDelete(id);
+  res.json(producto);
+})
 
 app.use("/api", router);
 
