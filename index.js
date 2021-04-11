@@ -3,8 +3,9 @@ const app = express();
 const router = express.Router();
 const path = require("path");
 const handlebars = require("express-handlebars");
-const Producto = require("./models/producto");
+//const Producto = require("./models/producto");
 const { db } = require("./models/producto");
+const faker = require('faker')
 
 require("dotenv").config();
 require("./database");
@@ -24,9 +25,9 @@ app.engine(
 
 router.get("/", function (req, res) {
   //res.sendFile(path.join(__dirname, '/public', 'index.html'));
-  res.render("form");
+  res.render("productos");
 });
-
+/* 
 router.get("/productos/:id", async (req, res) => {
   const id = req.params.id;
   let producto = await Producto.findById(id);
@@ -42,7 +43,39 @@ router.post("/productos", async (req, res) => {
 router.get("/productos", async (req, res) => {
   let productos = await Producto.find();
   res.json(productos);
+}); */
+
+router.get("/faker", async (req, res) => {
+
+  let cant = req.query.cant || 10
+  console.log(cant);
+
+  productos = []
+
+  if(cant == 0) {
+    const producto = {
+      producto: "No hay productos"
+    }
+    productos.push(producto)
+    res.render('productos', {productos, listExists: true})
+  }
+
+  
+  for(let i=0; i < cant; i++) {
+    
+    const producto = {
+      producto: faker.commerce.productName(),
+      precio: faker.commerce.price(),
+      foto: faker.image.imageUrl()
+    }
+
+  productos.push(producto)
+  
+  }
+  
+  res.render('productos', {productos, listExists: true})
 });
+
 
 router.delete("/productos/:id", async (req, res) => {
   const id = req.params.id;
