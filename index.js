@@ -2,14 +2,21 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 const path = require("path");
+const cookieParser = require("cookie-parser")
+const session = require('express-session')
+
 const handlebars = require("express-handlebars");
-//const Producto = require("./models/producto");
 const { db } = require("./models/producto");
-const faker = require('faker')
 
 require("dotenv").config();
 require("./database");
 
+app.use(cookieParser())
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -27,7 +34,7 @@ router.get("/", function (req, res) {
   //res.sendFile(path.join(__dirname, '/public', 'index.html'));
   res.render("productos");
 });
-/* 
+
 router.get("/productos/:id", async (req, res) => {
   const id = req.params.id;
   let producto = await Producto.findById(id);
@@ -43,45 +50,46 @@ router.post("/productos", async (req, res) => {
 router.get("/productos", async (req, res) => {
   let productos = await Producto.find();
   res.json(productos);
-}); */
-
-router.get("/faker", async (req, res) => {
-
-  let cant = req.query.cant || 10
-  console.log(cant);
-
-  productos = []
-
-  if(cant == 0) {
-    const producto = {
-      producto: "No hay productos"
-    }
-    productos.push(producto)
-    res.render('productos', {productos, listExists: true})
-  }
-
-  
-  for(let i=0; i < cant; i++) {
-    
-    const producto = {
-      producto: faker.commerce.productName(),
-      precio: faker.commerce.price(),
-      foto: faker.image.imageUrl()
-    }
-
-  productos.push(producto)
-  
-  }
-  
-  res.render('productos', {productos, listExists: true})
-});
-
+}); 
 
 router.delete("/productos/:id", async (req, res) => {
   const id = req.params.id;
   let producto = await Producto.findByIdAndDelete(id);
   res.json(producto);
 })
+
+//--------- SESSION -------------------
+
+
+router.post('/login', async (req, res) => {
+  const { username } = req.body
+
+  req.session.username = username
+  req.session.cookie.expires = new Date(Date.now() + 60000)
+  //Verificacion de que el usuario esta logueado con la misma session al actualizar
+  console.log(req.sessionID);
+  res.send(`Bienvenido ${req.session.username}`)
+})
+
+router.get('/logout', async (req, res) => {
+  const username = req.session.username;
+  req.session.destroy(err => {
+    if(!err){
+      res.send(`Hasta luego ${username}`)
+    }
+  })
+})
+
+
+
+
+
+
+
+
+
+//--------- SESSION -------------------
+
 
 app.use("/api", router);
 
