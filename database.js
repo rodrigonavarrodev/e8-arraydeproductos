@@ -1,11 +1,9 @@
+  
 const mongoose = require('mongoose');
 
-const MONGODB_URI = process.env.MONGODB_URI
-
-mongoose.connect(MONGODB_URI, {
+mongoose.connect('mongodb://localhost/normalizr', {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
-    .then(db => console.log('Database connected to', MONGODB_URI))
+    .then(db => console.log('Database connected to mongodb://localhost/normalizr'))
     .catch(err => console.log(err))
-    

@@ -1,0 +1,30 @@
+{
+    "entities": {
+      "autor": {
+        "mail del usuario": {
+          "id": "mail del usuario",
+          "nombre": "nombre del usuario",
+          "apellido": "apellido del usuario",
+          "edad": "edad del usuario",
+          "alias": "alias del usuario",
+          "avatar": "url avatar (foto, logo) del usuario"
+        }
+      },
+      "mensajes": {
+        "1": {
+          "autor": "mail del usuario",
+          "text": "mensaje del usuario",
+          "id": "1"
+        },
+        "2": {
+          "autor": "mail del usuario",
+          "text": "mensaje del usuario",
+          "id": "2"
+        }
+      }
+    },
+    "result": [
+      "1",
+      "2"
+    ]
+  }
