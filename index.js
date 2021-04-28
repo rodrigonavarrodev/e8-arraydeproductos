@@ -5,6 +5,11 @@ const path = require("path");
 const cookieParser = require("cookie-parser")
 const session = require('express-session')
 
+//Persistencia por mongoDB
+const MongoStore = require('connect-mongo')
+
+
+
 const handlebars = require("express-handlebars");
 const { db } = require("./models/producto");
 
@@ -13,10 +18,19 @@ require("./database");
 
 app.use(cookieParser())
 app.use(session({
+
+  store: MongoStore.create ({ mongoUrl: 'mongodb://localhost/sesiones'}),
+
   secret: 'secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 40000
+  }
 }))
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,7 +49,7 @@ router.get("/", function (req, res) {
   res.render("productos");
 });
 
-router.get("/productos/:id", async (req, res) => {
+/* router.get("/productos/:id", async (req, res) => {
   const id = req.params.id;
   let producto = await Producto.findById(id);
   res.json(producto);
@@ -56,7 +70,7 @@ router.delete("/productos/:id", async (req, res) => {
   const id = req.params.id;
   let producto = await Producto.findByIdAndDelete(id);
   res.json(producto);
-})
+}) */
 
 //--------- SESSION -------------------
 
