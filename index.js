@@ -6,6 +6,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
 
 const User = require('./models/user')
 
@@ -104,6 +105,46 @@ passport.use(
     }
   )
 );
+ 
+passport.use(
+  "facebook",
+  new FacebookStrategy(
+    {
+      clientID: "518252845843895",
+      clientSecret: "5a87ecbd91cc95d87205d9efe288dc26",
+      callbackURL: "http://localhost:8080/login/facebook/callback",
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      console.log('entre');
+      const findOrCreateUser = function () {
+        User.findOne({ facebookId: profile.id }, function (err, user) {
+          if (err) {
+            console.log("Error in SignUp: " + err);
+            return cb(err);
+          }
+          if (user) {
+            console.log("User already exists");
+            return cb(null, false);
+          } else {
+            var newUser = new User();
+            newUser.facebookId = profile.id;
+            newUser.username = profile.displayName;
+            newUser.save((err) => {
+              if (err) {
+                console.log("Error in Saving user: " + err);
+                throw err;
+              }
+              console.log("User Registration succesful");
+              console.log(profile);
+              return cb(null, newUser);
+            });
+          }
+        });
+      };
+      process.nextTick(findOrCreateUser);
+    }
+  )
+);
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -126,8 +167,19 @@ app.post(
   "/login",
   passport.authenticate("login", { failureRedirect: "/faillogin" }),
   (req, res) => {
+    
+    res.redirect("/");
+  }
+);
+
+app.get("/auth/facebook", passport.authenticate("facebook"));
+
+app.get(
+  "/login/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
     res.json('Login OK')
-    //res.redirect("/");
   }
 );
 
