@@ -1,1 +1,3 @@
-node_modules
+test/node_modules
+Profiling/node_modules
+Autocannon0x/node_modules
