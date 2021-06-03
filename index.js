@@ -148,7 +148,7 @@ passport.use(
                 throw err;
               }
               console.log("User Registration succesful");
-
+ 
               //envio un email a la persona que se registro
               const mailOptions = {
                 from: "test Coderhouse Ethereal",
